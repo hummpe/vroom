@@ -36,7 +36,11 @@ Assumptions:
 	positions ranging from 0 <-> 3 in the x- and
 	y-axis
 
-	
+	This assumption leads to the sample input given:
+
+	8 6
+	2 3 N
+	FFFRFFLBB	failing, because at the 3rd command (F), the car	will be at position [2, 6] - which will render the	center point of the car at [2.5, 6.5] => Out of bounds
 
 TODO:
 -	Add more descriptive comments in the "logic heavy"
@@ -65,4 +69,8 @@ Notes:
 -	Should have redone the logic regarding positions,
 	and let the position of the car be cars "center point".
 	
-
+-	There is a check implemented for if the cars outside parameters
+	are within a wall also - however, when the diameter is 1
+	and the step size for each moving command is 1, no such
+	cases will appear where the center point is not out of
+	bounds aswell.
