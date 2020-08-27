@@ -1,13 +1,18 @@
+/**
+* Contains the implementation of the Car class
+* @file Car.cpp
+* @author Tobias Johansson
+* @date 2020-08-26
+*/
+
 #include "Car.h"
-
-
 
 Car::Car()
 {
-	Car(1, Position2D(0.0f, 0.0f), Heading::UNDEFINED, "Car");
+	Car( 1.0f, Position2D(0.0f, 0.0f), Heading::UNDEFINED, "Car" );
 }
 
-Car::Car(unsigned int diameter, const Position2D & startingPosition, Heading heading, std::string type)
+Car::Car(float diameter, const Position2D & startingPosition, Heading heading, std::string type)
 	: m_diameter {diameter}, 
 	m_position {startingPosition},
 	m_heading {heading},
@@ -19,12 +24,12 @@ Car::~Car()
 {
 }
 
-int Car::getDiameter() const
+float Car::getDiameter() const
 {
 	return m_diameter;
 }
 
-void Car::setDiameter(unsigned int diameter)
+void Car::setDiameter(float diameter)
 {
 	m_diameter = diameter;
 }

@@ -1,3 +1,11 @@
+/**
+* Contains the definition of and utility functions for the Command-enum
+*
+* @file Command.h
+* @author Tobias Johansson
+* @date 2020-08-26
+*/
+
 #pragma once
 
 #include <string>

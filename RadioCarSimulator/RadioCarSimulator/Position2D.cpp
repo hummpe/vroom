@@ -1,6 +1,11 @@
+/**
+* Contains the implementation of the Position2D class
+* @file Position2D.cpp
+* @author Tobias Johansson
+* @date 2020-08-26
+*/
+
 #include "Position2D.h"
-
-
 
 Position2D::Position2D()
 {
@@ -11,7 +16,6 @@ Position2D::Position2D(float x, float y)
 	: m_x {x}, m_y {y}
 {
 }
-
 
 Position2D::~Position2D()
 {
@@ -39,6 +43,6 @@ void Position2D::setY(float y)
 
 std::ostream & operator<<(std::ostream & out, const Position2D & p)
 {
-	out << "(" << p.getX() << ", " << p.getY() << ")";
+	out << "[" << p.getX() << ", " << p.getY() << "]";
 	return out;
 }

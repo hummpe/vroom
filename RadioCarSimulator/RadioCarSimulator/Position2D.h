@@ -1,3 +1,10 @@
+/**
+* Contains the definition of the Position2D class
+* @file Position2D.h
+* @author Tobias Johansson
+* @date 2020-08-26
+*/
+
 #pragma once
 
 #include <iostream>

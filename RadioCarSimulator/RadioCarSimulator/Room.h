@@ -1,4 +1,12 @@
+/**
+* Contains the definition of the Room class
+* @file Room.h
+* @author Tobias Johansson
+* @date 2020-08-26
+*/
+
 #pragma once
+
 class Room
 {
 public:

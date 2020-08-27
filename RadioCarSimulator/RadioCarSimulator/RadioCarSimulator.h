@@ -1,9 +1,18 @@
+/**
+* Contains the definition of the RadioCarSimulator class
+* @file RadioCarSimulator.h
+* @author Tobias Johansson
+* @date 2020-08-26
+*/
+
 #pragma once
 
 #include <vector>
 
 #include "Room.h"
 #include "MonsterTruck.h"
+#include "OffroadCar.h"
+#include "SportTrackCar.h"
 #include "Command.h"
 
 class RadioCarSimulator

@@ -1,6 +1,11 @@
+/**
+* Contains the implementation of the Room class
+* @file Room.cpp
+* @author Tobias Johansson
+* @date 2020-08-26
+*/
+
 #include "Room.h"
-
-
 
 Room::Room()
 {
@@ -11,7 +16,6 @@ Room::Room(unsigned int width, unsigned int depth)
 	: m_width {width}, m_depth{depth}
 {
 }
-
 
 Room::~Room()
 {

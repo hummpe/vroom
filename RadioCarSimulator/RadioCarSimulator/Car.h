@@ -1,3 +1,11 @@
+/**
+* Contains the definition of the Car class
+*
+* @file Car.h
+* @author Tobias Johansson
+* @date 2020-08-26
+*/
+
 #pragma once
 
 #include <string>
@@ -9,11 +17,11 @@ class Car
 {
 public:
 	Car();
-	Car(unsigned int diameter, const Position2D& startingPosition, Heading heading, std::string type);
+	Car(float diameter, const Position2D& startingPosition, Heading heading, std::string type);
 	~Car();
 
-	int getDiameter() const;
-	void setDiameter(unsigned int diameter);
+	float getDiameter() const;
+	void setDiameter(float diameter);
 	Position2D& getPosition();
 	void setPosition(Position2D position);
 	Heading getHeading() const;
@@ -27,7 +35,7 @@ public:
 	void rotateClockwise();
 
 private:
-	unsigned int m_diameter;
+	float m_diameter;
 	Position2D m_position;
 	Heading m_heading;
 	std::string m_type;

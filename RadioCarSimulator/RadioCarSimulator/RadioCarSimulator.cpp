@@ -1,3 +1,10 @@
+/**
+* Contains the implementation of the RadioCarSimulator class
+* @file RadioCarSimulator.cpp
+* @author Tobias Johansson
+* @date 2020-08-26
+*/
+
 #include "RadioCarSimulator.h"
 
 #include <string>
@@ -8,7 +15,6 @@ RadioCarSimulator::RadioCarSimulator()
 	: m_initialized {false}, m_ranSuccessfully {false}
 {
 }
-
 
 RadioCarSimulator::~RadioCarSimulator()
 {
@@ -40,7 +46,10 @@ void RadioCarSimulator::initialize()
 
 void RadioCarSimulator::run()
 {
-	std::cout << "RadioCarSimulator - Running" << std::endl;
+	std::cout << "RadioCarSimulator - Running simulation on:" << std::endl;
+	std::cout << "Car type: " << m_car.getType() << std::endl;
+	std::cout << "Starting position: " << m_car.getPosition() << std::endl;
+	std::cout << "Car size/diameter: " << m_car.getDiameter() << std::endl;
 
 	if (!m_initialized)
 	{
@@ -52,11 +61,19 @@ void RadioCarSimulator::run()
 	 
 
 	// Iterate over commands and apply them to the car one by one
+	int commandNr = 0;
+	bool printEachStep = false;
 	for (Command command : m_commands)
 	{
 		executeCommandOnCar(command);
 
-		std::cout << m_car.getPosition() << std::endl;
+		if (printEachStep)
+		{
+			std::cout << ++commandNr << ": "
+				<< "Position: " << m_car.getPosition()
+				<< " Heading: " << HeadingToString(m_car.getHeading())
+				<< std::endl;
+		}
 
 		if (!carInBounds())
 		{
@@ -90,31 +107,38 @@ void RadioCarSimulator::analyzeResult()
 
 bool RadioCarSimulator::roomSetup()
 {
-	int widthOfRoom = -1;
-	int depthOfRoom = -1;
+	int widthOfRoom = 0;
+	int depthOfRoom = 0;
 
 	// 1. Ask about size of the room
-	std::cout << "Size of room (<width><space><depth>): ";
+	std::cout << "Enter size of room (<width><space><depth>): ";
 	try
 	{
-		// TODO: Get full line, since expected input is <integer><space><integer> ?
+		// TODO: Get full line (getline) instead, and either tokenize and try to convert to unsigned int
+		// or regex to see if it matches "<width><space><depth>
+
 		std::cin >> widthOfRoom;
 
-		// TODO: Expand error checking, and "clear" cin..?
-		if (widthOfRoom < 0)
+		if(widthOfRoom <= 0
+			|| std::cin.fail())
 			throw std::invalid_argument{ "Bad input - Width of room is excpected to be a positive integer" };
 
 		std::cin >> depthOfRoom;
 
-		if (depthOfRoom < 0)
+		if (depthOfRoom <= 0
+			|| std::cin.fail())
 			throw std::invalid_argument{ "Bad input - Depth of room is excpected to be a positive integer" };
-
-		m_room.setWidth(widthOfRoom);
-		m_room.setDepth(depthOfRoom);
 
 		// "Clean up" cin buffer
 		std::cin.clear();
 		std::cin.ignore(INT_MAX, '\n');
+		
+		// Neither widthOfRoom or depthOfRoom should be able
+		// to be negative at this point
+		// Set the values read from user input
+		m_room.setWidth(static_cast<int>(widthOfRoom));
+		m_room.setDepth(static_cast<int>(depthOfRoom));
+
 	}
 	catch (const std::exception& e)
 	{
@@ -127,23 +151,30 @@ bool RadioCarSimulator::roomSetup()
 
 bool RadioCarSimulator::carSetup()
 {
-	int startPositionX = 0;
-	int startPositionY = 0;
+	float startPositionX = -0.1f;
+	float startPositionY = -0.1f;
 	std::string startHeadingString = "";
 	Heading startHeading = Heading::UNDEFINED;
 
-	std::cout << "Starting position and heading of car (<x><space><y><space><heading>): ";
+	std::cout << "Enter starting position and heading of car (<x><space><y><space><heading>): ";
 	try
 	{
+		// TODO: Get full line (getline) instead, and either tokenize and try to convert to wanted data type
+		// or regex to see if it at least matches "<x><space><y><space><heading>"
+
 		std::cin >> startPositionX;
 
-		if (startPositionX < 0 || startPositionX > m_room.getWidth())
-			throw std::invalid_argument{ "Bad input - X position is not an integer between 0 and the width of the room" };
+		if (startPositionX < 0.0f
+			|| startPositionX > static_cast<float>(m_room.getWidth())
+			|| std::cin.fail())
+			throw std::invalid_argument{ "Bad input - X position is not a floating point number between 0.0 and the width of the room" };
 
 		std::cin >> startPositionY;
 
-		if (startPositionY < 0 || startPositionY > m_room.getDepth())
-			throw std::invalid_argument{ "Bad input - Y position is not an integer between 0 and the depth of the room" };
+		if (startPositionY < 0.0f
+			|| startPositionY > static_cast<float>(m_room.getDepth())
+			|| std::cin.fail())
+			throw std::invalid_argument{ "Bad input - Y position is not not a floating point number between 0 and the depth of the room" };
 
 		std::cin >> startHeadingString;
 		startHeading = StringToHeading(startHeadingString);
@@ -151,16 +182,17 @@ bool RadioCarSimulator::carSetup()
 		if(startHeading == Heading::UNDEFINED)
 			throw std::invalid_argument{ "Bad input - Heading is not of known format {N, S, E, W}" };
 
+		// "Clean up" cin buffer
+		std::cin.clear();
+		std::cin.ignore(INT_MAX, '\n');
+
+		// Set the values read from user input
 		m_car.getPosition().setX(startPositionX);
 		m_car.getPosition().setY(startPositionY);
 		m_car.setHeading(startHeading);
 
 		if(!carInBounds())
 			throw std::invalid_argument{ "Bad input - The car is out of bounds of the room" };
-
-		// "Clean up" cin buffer
-		std::cin.clear();
-		std::cin.ignore(INT_MAX, '\n');
 	}
 	catch (const std::exception& e)
 	{
@@ -212,7 +244,7 @@ bool RadioCarSimulator::carInBounds()
 	// The car can be treated as a round object with an X meter diameter
 
 	// Find center-point of car
-	float radiusOfCar = static_cast<float>(m_car.getDiameter()) / 2.0f;
+	float radiusOfCar = m_car.getDiameter() / 2.0f;
 	float centerPointX = m_car.getPosition().getX() + radiusOfCar;
 	float centerPointY = m_car.getPosition().getY() + radiusOfCar;
 	
@@ -226,12 +258,13 @@ bool RadioCarSimulator::carInBounds()
 			throw std::invalid_argument("Center point X of car is exceeding the width of the room, out of bounds");
 
 		// Inside western wall
-		if (centerPointX < radiusOfCar)
+		if ((centerPointX - radiusOfCar) < 0)
 			throw std::invalid_argument("The car is inside the western wall, out of bounds of the room");
 
 		// Inside eastern wall
-		if (centerPointX > (roomWidth - radiusOfCar))
+		if ((centerPointX + radiusOfCar) > roomWidth)
 			throw std::invalid_argument("The car is inside the eastern wall, out of bounds of the room");
+
 
 		// Check if in bounds along y-axis
 		if (centerPointY < 0)
@@ -240,13 +273,13 @@ bool RadioCarSimulator::carInBounds()
 		if (centerPointY > roomDepth)
 			throw std::invalid_argument("Center point Y of car is exceeding the depth of the room, out of bounds");
 
-		// Inside north wall
-		if (centerPointY < radiusOfCar)
-			throw std::invalid_argument("The car is inside the north wall, out of bounds");
-
 		// Inside south wall
-		if (centerPointX > (roomDepth - radiusOfCar))
+		if ((centerPointX - radiusOfCar) < 0)
 			throw std::invalid_argument("The car is inside the south wall, out of bounds");
+
+		// Inside north wall
+		if ((centerPointY + radiusOfCar) > roomDepth)
+			throw std::invalid_argument("The car is inside the north wall, out of bounds");
 	}
 	catch (const std::exception& e)
 	{

@@ -6,8 +6,6 @@
 * @date 2020-08-26
 */
 
-#include <iostream>
-
 #include "RadioCarSimulator.h"
 
 int main()

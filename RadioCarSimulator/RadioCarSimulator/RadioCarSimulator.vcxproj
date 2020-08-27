@@ -118,18 +118,25 @@
     <ClCompile Include="Car.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MonsterTruck.cpp" />
+    <ClCompile Include="OffroadCar.cpp" />
     <ClCompile Include="Position2D.cpp" />
     <ClCompile Include="RadioCarSimulator.cpp" />
     <ClCompile Include="Room.cpp" />
+    <ClCompile Include="SportTrackCar.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Car.h" />
     <ClInclude Include="Command.h" />
     <ClInclude Include="Heading.h" />
     <ClInclude Include="MonsterTruck.h" />
+    <ClInclude Include="OffroadCar.h" />
     <ClInclude Include="Position2D.h" />
     <ClInclude Include="RadioCarSimulator.h" />
     <ClInclude Include="Room.h" />
+    <ClInclude Include="SportTrackCar.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
